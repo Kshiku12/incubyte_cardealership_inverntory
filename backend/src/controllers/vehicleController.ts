@@ -240,3 +240,47 @@ export const compareVehicles = async (req: Request, res: Response): Promise<void
     res.status(500).json({ error: 'Failed to compare vehicles: ' + error.message });
   }
 };
+
+export const customBuildVehicle = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { baseModel, exteriorColor, wheelPackage, interiorTrim, performancePackage, soundSystem } = req.body;
+
+    const existing = await Vehicle.findOne({
+      $or: [
+        { model: { $regex: new RegExp(baseModel?.split(' ')[0] || 'Porsche', 'i') } },
+        { make: { $regex: new RegExp(baseModel?.split(' ')[0] || 'Porsche', 'i') } }
+      ]
+    });
+
+    const basePrice = existing?.price || 194900;
+
+    let optionsPrice = 0;
+    if (exteriorColor) optionsPrice += 3500;
+    if (wheelPackage) optionsPrice += 4200;
+    if (interiorTrim) optionsPrice += 3800;
+    if (performancePackage) optionsPrice += 7500;
+    if (soundSystem) optionsPrice += 4800;
+
+    const totalPrice = basePrice + optionsPrice;
+    const buildCode = 'BLD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+    res.status(201).json({
+      message: 'Custom vehicle specification generated successfully',
+      buildCode,
+      basePrice,
+      optionsPrice,
+      totalPrice,
+      config: {
+        baseModel: baseModel || 'Custom Performance Vehicle',
+        exteriorColor,
+        wheelPackage,
+        interiorTrim,
+        performancePackage,
+        soundSystem
+      }
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: 'Custom build calculation error: ' + error.message });
+  }
+};
+

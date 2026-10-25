@@ -8,7 +8,8 @@ import {
   deleteVehicle,
   purchaseVehicle,
   restockVehicle,
-  compareVehicles
+  compareVehicles,
+  customBuildVehicle
 } from '../controllers/vehicleController';
 import { authenticate, authorize } from '../middleware/authMiddleware';
 
@@ -20,6 +21,7 @@ router.use(authenticate);
 // Specific routes first to prevent parameter collisions
 router.get('/search', searchVehicles);
 router.get('/compare', compareVehicles);
+router.post('/custom-build', customBuildVehicle);
 
 // Collection routes
 router.get('/', getVehicles);

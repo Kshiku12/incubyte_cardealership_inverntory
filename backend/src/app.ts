@@ -2,6 +2,8 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes';
 import vehicleRoutes from './routes/vehicleRoutes';
+import aiRoutes from './routes/aiRoutes';
+import newsRoutes from './routes/newsRoutes';
 
 const app: Application = express();
 
@@ -18,5 +20,11 @@ app.use('/api/auth', authRoutes);
 
 // Vehicles and Inventory routes
 app.use('/api/vehicles', vehicleRoutes);
+
+// AI Concierge routes
+app.use('/api/ai', aiRoutes);
+
+// Automotive News routes
+app.use('/api/news', newsRoutes);
 
 export default app;
